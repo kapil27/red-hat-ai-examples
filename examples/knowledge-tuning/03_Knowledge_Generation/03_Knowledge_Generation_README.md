@@ -14,7 +14,7 @@
 
 ## Knowledge generation and expanding seed dataset into Q&A
 
-This module expands the curated seed examples produced in the previous step into a larger set of Q&A pairs using LLMs and local utilities. It can be used to produce synthetic training examples or to augment existing datasets.
+This module expands the curated seed examples produced in the previous step into a larger set of Q&A pairs by using a Large Language Model (LLM) and local utilities. 
 
 ![Knowledge Generation Flow Diagram](../../../assets/usecase/knowledge-tuning/Knowledge%20Genertaion.png)
 

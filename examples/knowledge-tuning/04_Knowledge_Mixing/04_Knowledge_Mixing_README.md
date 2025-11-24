@@ -52,6 +52,6 @@ The notebook generates the following artifacts:
 
 In this Knowledge Tuning example, the output training dataset is small enough for training and you can proceed to [Module 5: Model Training](../05_Model_Training/05_Model_Training_README.md).
 
-However, in a use case where the output dataset is too large for training (for example, 1 million samples), your next step would be subset selection and data verification as illustrated in [the example subset-selection notebook](https://github.com/opendatahub-io/data-processing/blob/main/notebooks/use-cases/subset-selection.ipynb). 
+**NOTE:** In a use case where the output dataset is too large for training (for example, 1 million samples), your next step would be to identify representative samples subsets of the data as illustrated in [the example Subset Selection for Dataset Diversity notebook](https://github.com/opendatahub-io/data-processing/blob/main/notebooks/use-cases/subset-selection.ipynb).
 
 

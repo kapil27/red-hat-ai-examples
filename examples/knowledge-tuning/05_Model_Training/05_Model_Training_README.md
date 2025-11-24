@@ -17,7 +17,6 @@ Ihe notebook in this module demonstrates how to fine-tune or instruction-tune a 
 
 ![Model Training Flow Diagram](../../../assets/usecase/knowledge-tuning/Model%20Training.png)
 
-You can train the student model on a GPU-enabled workbench or on a training cluster.
 
 ### Prerequisites
 
@@ -43,7 +42,8 @@ The notebook generates the following artifacts:
 
 ## Debug & tips
 
-- Monitor GPU memory, if needed.
+- Monitor GPU memory, if needed, for example, if takes the model longer than expected to return a result. You can use the NVIDIA System Management Interface (nvidia-smi) command-line utility to monitor the GPU utilization to determine whether the model is using GPU memory.
+
 
 ## Next step
 

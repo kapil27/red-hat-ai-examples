@@ -32,13 +32,13 @@ The notebooks provided in the Knowledge Tuning example require the following res
 
 To run all of the notebooks in the Knowledge Training example, you must ensure that the following resources are configured on the OpenShift cluster:
 
-1. Your Red Hat OpenShift cluster administrator must configure the following resources:
+- Your Red Hat OpenShift cluster administrator must configure the following resources:
 
    - A persistent volume with a storage capacity of 200 GB or greater.
 
    - Installed and enabled a NVIDIA GPU as described in [Enabling accelerators]https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.0/html/working_with_accelerators/enabling-accelerators_accelerators.
 
-2. An OpenShift AI administrator must create a hardware profile that allocates the following resources, as described in [Creating a hardware profile](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.0/html/working_with_accelerators/working-with-hardware-profiles_accelerators#creating-a-hardware-profile_accelerators).
+- An OpenShift AI administrator must create a hardware profile that allocates the following resources, as described in [Creating a hardware profile](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.0/html/working_with_accelerators/working-with-hardware-profiles_accelerators#creating-a-hardware-profile_accelerators).
 
    - **CPU:**
      - Request: 100 Cores
@@ -98,7 +98,7 @@ The JupyterLab environment is a web-based environment, but everything you do ins
 
 6. For **Deployment size**, select the hardware profile created by your cluster administrator.
 
-   NOTE: For the Knowledge Tuning example, each module subfolder contains an `.env.example` file that defines the environment variables for that module. Alternately, you can define environment variables here in the workbench configuration.
+   NOTE: For the Knowledge Tuning example, each module subfolder contains an `.env.example` file that defines the environment variables for that module. Alternately, you can define environment variables here in the workbench configuration. The values of environment variables that you set in the workbench take precedence over values in the `.env.example` files.
 
 7. Click **Create workbench**.
 
