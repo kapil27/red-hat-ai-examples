@@ -14,15 +14,13 @@
 
 ## Knowledge generation and expanding seed dataset into Q&A
 
-This module expands the curated seed examples produced in the previous step into a larger set of Q&A pairs by using a Large Language Model (LLM) and local utilities. 
+This module expands the curated seed examples produced in the previous step into a larger set of Q&A pairs by using a Large Language Model (LLM) teacher model and local utilities. 
 
 ![Knowledge Generation Flow Diagram](../../../assets/usecase/knowledge-tuning/Knowledge%20Genertaion.png)
 
 ### Prerequisites
 
 - You completed the steps in [Module 2: Data Processing](../02_Data_Processing/02_Data_Processing_README.md).
-
-- You have access to an LLM endpoint.
 
 - Verify that the following environment variables are set in the [.env.example](./.env.example) file:
   - `TEACHER_MODEL_API_KEY` — The LLM API key.

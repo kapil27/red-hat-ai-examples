@@ -32,6 +32,10 @@ A general-purpose language model lacks the specific, nuanced knowledge of Canadi
 
 In this example, your goal is to fine-tune a base model on the official FINTRAC guidance so that it provides accurate, context-specific answers that reflect the actual regulations.
 
+## About the models
+
+This example follows the Teacher-Student model paradigm. The student model (also known as the base model) is `RedHatAI/Llama-3.1-8B-Instruct`. The teacher model is `openai/gpt-oss-120b`. The teacher model is a large, complex, and highly accurate model that serves as a source of knowledge. It generates training data for the smaller student model. The student model learns from the teacher’s outputs to improve its performance. Both models in this example are open-source and do not require API keys to access them.
+
 ## About the example Git repo structure
 
 The files for each module in the workflow are organized in subfolders of this Git repository, under the `examples/knowledge-tuning/` folder. Each subfolder contains a notebook, a `pyproject.toml` file for dependencies, an `.env.example` file for environment variables, and a `README.md` file.
