@@ -22,7 +22,6 @@ In this module, you convert a data source (an example webpage) into a small, cur
 
 - You completed the steps in [Module 1: Base Model Evaluation](../01_Base_Model_Evaluation/01_Base_Model_Evaluation_README.md).
 
-
 ### Procedure
 
 - In JupyterLab, open the [Data_Processing.ipynb](./Data_Processing.ipynb) file and follow the notebook instructions.

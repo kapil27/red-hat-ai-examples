@@ -17,7 +17,6 @@ Ihe notebook in this module demonstrates how to fine-tune a student model by usi
 
 ![Model Training Flow Diagram](../../../assets/usecase/knowledge-tuning/Model%20Training.png)
 
-
 ### Prerequisites
 
 - You completed the steps in [Module 4: Knowledge Mixing](../04_Knowledge_Mixing/04_Knowledge_Mixing_README.md).
@@ -25,7 +24,6 @@ Ihe notebook in this module demonstrates how to fine-tune a student model by usi
 - Your workbench is GPU-enabled for training, as described in [Setup](../00_Setup/00_Setup_README.md).
 
 - The [.env.example](./.env.example) file sets the `STUDENT_MODEL` environment variable.
-
 
 ### Procedure
 
@@ -40,7 +38,6 @@ The notebook generates the following artifacts:
 ## Debug & tips
 
 - Monitor GPU memory if, for example, the model takes longer than expected to return a result. You can use the NVIDIA System Management Interface (nvidia-smi) command-line utility to monitor the GPU utilization to determine whether the model is using GPU memory.
-
 
 ## Next step
 

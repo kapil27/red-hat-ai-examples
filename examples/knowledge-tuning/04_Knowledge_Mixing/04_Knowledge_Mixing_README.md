@@ -30,7 +30,6 @@ This module mixes generated Q&A, extractive/detailed summaries, and other artifa
   - `CUT_SIZES` — A comma-separated list of cut sizes to generate. For example: `10,20`
   - `QA_PER_DOC` — The number of Q&A pairs to save in each document.
 
-
 ### Procedure
 
 1. In JupyterLab, open the [Knowledge_Mixing.ipynb](./Knowledge_Mixing.ipynb) file and follow the notebook instructions.
@@ -50,5 +49,3 @@ The notebook generates the following artifacts:
 In this Knowledge Tuning example, the output training dataset is small enough for training and you can proceed to [Module 5: Model Training](../05_Model_Training/05_Model_Training_README.md).
 
 **NOTE:** In a use case where the output dataset is too large for training (for example, 1 million samples), your next step would be to identify representative samples subsets of the data as illustrated in [the example Subset Selection for Dataset Diversity notebook](https://github.com/opendatahub-io/data-processing/blob/main/notebooks/use-cases/subset-selection.ipynb).
-
-

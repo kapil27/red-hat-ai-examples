@@ -30,21 +30,21 @@ To run all of the notebooks in the Knowledge Tuning example, you must ensure tha
 
 - Your Red Hat OpenShift cluster administrator must configure the following resources:
 
-   - A persistent volume with a storage capacity of 200 GB or greater.
+  - A persistent volume with a storage capacity of 200 GB or greater.
 
-   - An NVIDIA GPU that is installed and enabled, as described in [Enabling accelerators](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.0/html/working_with_accelerators/enabling-accelerators_accelerators).
+  - An NVIDIA GPU that is installed and enabled, as described in [Enabling accelerators](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.0/html/working_with_accelerators/enabling-accelerators_accelerators).
 
 - An OpenShift AI administrator must create a hardware profile that allocates the following resources, as described in [Creating a hardware profile](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.0/html/working_with_accelerators/working-with-hardware-profiles_accelerators#creating-a-hardware-profile_accelerators).
 
-   - **CPU:**
-     - Request: 100 Cores
-     - Limit: 100 Cores
-   - **Memory:**
-     - Request: 100 GiB
-     - Limit: 100 GiB
-   - **Nvidia GPU**
-     - Request: 1
-     - Limit: 1
+  - **CPU:**
+    - Request: 100 Cores
+    - Limit: 100 Cores
+  - **Memory:**
+    - Request: 100 GiB
+    - Limit: 100 GiB
+  - **Nvidia GPU**
+    - Request: 1
+    - Limit: 1
 
 ## Create a project
 
