@@ -1,102 +1,180 @@
-# Progress Tracking with Kubeflow Trainer
+# Real-Time Progress Tracking with TransformersTrainer
 
-This example demonstrates how to use real-time progress tracking in Kubeflow Trainer v2 on Red Hat OpenShift AI.
+This example demonstrates how to monitor distributed training progress in real-time using `TransformersTrainer` from Kubeflow Trainer v2 on Red Hat OpenShift AI.
 
 ## Overview
 
-Progress tracking provides visibility into your training jobs, including:
+In this example, we fine-tune the **Qwen 2.5 1.5B Instruct** model on the **Stanford Alpaca** instruction-following dataset. The training runs on 2 GPU nodes with automatic progress tracking enabled, allowing you to monitor training metrics in real-time from the OpenShift AI Dashboard.
 
-- Current step and epoch
-- Training loss and metrics
-- Estimated time remaining
-- Throughput (samples/second)
+### Key Features
 
-When using RHAI trainers (`TransformersTrainer` or `TrainingHubTrainer`), progress tracking is **enabled by default** with no additional configuration required.
+| Feature | Description |
+|---------|-------------|
+| **Automatic Progress Tracking** | TransformersTrainer auto-injects a `KubeflowProgressCallback` that exposes training metrics via HTTP |
+| **Real-Time Metrics** | View current step, epoch, loss, and estimated time remaining in the OpenShift AI Dashboard |
+| **PVC-Based Checkpointing** | Save model checkpoints to a shared PersistentVolumeClaim for durability and resume capability |
+| **Distributed Training** | Run training across multiple GPU nodes using PyTorch's DistributedDataParallel (DDP) |
 
-## Prerequisites
+> [!IMPORTANT]
+> This example has been tested with OpenShift AI 3.2 and Kubeflow Trainer v2.
+> If you have different hardware configuration, adjust the `resources_per_node` settings accordingly.
 
-- Access to an OpenShift AI cluster with Kubeflow Trainer enabled
-- A project (namespace) configured for training workloads
-- Python 3.9+
+## Requirements
 
-## Quick Start
+* An OpenShift cluster with OpenShift AI (RHOAI) 3.2 installed:
+  * The `dashboard`, `trainingoperator` and `workbenches` components enabled
+* At least 2 worker nodes with NVIDIA GPUs (Ampere-based or newer recommended)
+* A dynamic storage provisioner supporting RWX PVC provisioning
 
-### 1. Install the SDK
+## Setup
 
-```bash
-pip install "kubeflow @ git+https://github.com/opendatahub-io/kubeflow-sdk.git@v0.2.1+rhai0"
+### Setup Workbench
+
+* Access the OpenShift AI dashboard, for example from the top navigation bar menu:
+![](./images/01.png)
+
+* Log in, then go to _Data Science Projects_ and create a project:
+![](./images/02.png)
+
+* Once the project is created, click on _Create a workbench_:
+![](./images/03.png)
+
+* Then create a workbench with the following settings:
+  * Select the `Jupyter | PyTorch | CUDA | Python 3.12` notebook image:
+    ![](./images/04a.png)
+  * Select the `Medium` container size and add an accelerator:
+    ![](./images/04b.png)
+    > [!NOTE]
+    > Adding an accelerator is only needed to test the fine-tuned model from within the workbench.
+  * Create a storage that'll be shared between the workbench and the fine-tuning runs.
+    Make sure it uses a storage class with RWX capability and name it `shared`:
+    ![](./images/04c.png)
+    ![](./images/04d.png)
+    > [!NOTE]
+    > The shared PVC will be mounted at `/opt/app-root/src/shared` in the workbench.
+  * Review the configuration and click "Create workbench":
+    ![](./images/04e.png)
+
+* From "Workbenches" page, click on _Open_ when the workbench you've just created becomes ready:
+![](./images/05.png)
+
+* From the workbench, clone this repository:
+  ```bash
+  git clone https://github.com/red-hat-data-services/red-hat-ai-examples.git
+  ```
+
+* Navigate to `red-hat-ai-examples/examples/trainer/progress-tracking/` and open the `progress-tracking-example.ipynb` notebook
+
+## Environment Variables
+
+Before running the notebook, ensure you have the following environment variables set:
+
+| Variable | Description |
+|----------|-------------|
+| `OPENSHIFT_API_URL` | Your OpenShift API server URL (auto-set in workbench) |
+| `NOTEBOOK_USER_TOKEN` | Authentication token for API access (auto-set in workbench) |
+
+## How Progress Tracking Works
+
+When you use `TransformersTrainer` with `enable_progression_tracking=True` (the default):
+
+1. **Automatic Instrumentation:** TransformersTrainer injects a `KubeflowProgressCallback` into your HuggingFace `Trainer`
+2. **HTTP Metrics Server:** A lightweight HTTP server starts on port 28080, exposing metrics as JSON
+3. **Dashboard Integration:** OpenShift AI Dashboard polls these metrics and displays real-time progress
+
+### Available Metrics
+
+| Metric | Description |
+|--------|-------------|
+| `progressPercentage` | Overall completion percentage (0-100) |
+| `currentStep` / `totalSteps` | Training step progress |
+| `currentEpoch` / `totalEpochs` | Epoch progress |
+| `estimatedRemainingSeconds` | Estimated time to completion |
+| `trainMetrics.loss` | Current training loss value |
+| `trainMetrics.learning_rate` | Current learning rate |
+
+## Model and Dataset
+
+### Model: Qwen 2.5 1.5B Instruct
+
+A compact instruction-tuned language model from the Qwen family:
+- **Parameters:** 1.5 billion
+- **Context Length:** 32K tokens
+- **Languages:** Multilingual with strong English and Chinese support
+- **Use Case:** Ideal for instruction-following, chat, and text generation tasks
+
+### Dataset: Stanford Alpaca
+
+A widely-used instruction-following dataset:
+- **Source:** Stanford University
+- **Size:** 52,000 instruction-response pairs (we use 500 samples for this demo)
+- **Format:** Instruction, optional input, and response
+
+Sample format:
+```
+### Instruction:
+Give three tips for staying healthy.
+
+### Response:
+1. Eat a balanced diet...
+2. Exercise regularly...
+3. Get enough sleep...
 ```
 
-### 2. Run the notebook
+## Validation
 
-Open `progress-tracking-example.ipynb` in your workbench and execute the cells.
+This example has been validated with the following configuration:
 
-## Viewing Progress
+### Qwen 2.5 1.5B Instruct - Alpaca Dataset - 2x NVIDIA A100/80GB
 
-### OpenShift AI Dashboard
+* **Infrastructure:**
+  * OpenShift AI 3.2
+  * 2x NVIDIA-A100-SXM4-80GB
 
-1. Navigate to **Model training** in your project
-2. Select your training job
-3. View real-time metrics including steps, epochs, loss, and ETA
+* **Training Configuration:**
+  ```yaml
+  num_train_epochs: 1
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4
+  learning_rate: 2e-5
+  bf16: true
+  save_steps: 20
+  ```
 
-### CLI
+* **Job Configuration:**
+  ```yaml
+  num_nodes: 2
+  resources_per_node:
+    nvidia.com/gpu: 1
+    memory: 16Gi
+    cpu: 4
+  enable_progression_tracking: true
+  metrics_poll_interval_seconds: 30
+  ```
 
-```bash
-# Get progress annotations
-oc get trainjob <job-name> -o jsonpath='{.metadata.annotations.trainer\.opendatahub\.io/trainerStatus}' | jq .
+* **Training Time:** ~1 minute for 500 samples
 
-# Watch job status
-oc get trainjob <job-name> -w
-```
+## TransformersTrainer Quick Reference
 
-### Example output
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `func` | Training function using `transformers.Trainer` | Required |
+| `num_nodes` | Number of distributed training nodes | Required |
+| `resources_per_node` | GPU, CPU, memory per node | Required |
+| `enable_progression_tracking` | Enable real-time metrics server | `True` |
+| `enable_jit_checkpoint` | Enable JIT checkpointing on preemption | `False` |
+| `metrics_poll_interval_seconds` | How often controller polls metrics | `30` |
 
-```json
-{
-  "progressPercentage": 75,
-  "currentStep": 150,
-  "totalSteps": 200,
-  "currentEpoch": 1,
-  "totalEpochs": 2,
-  "estimatedRemainingSeconds": 45,
-  "trainMetrics": {
-    "loss": 0.023,
-    "throughput_samples_sec": 58.2
-  }
-}
-```
+## Next Steps
 
-## How It Works
+- **Scale Up:** Increase `num_nodes` for larger models or datasets
+- **Use LoRA:** Add PEFT/LoRA for memory-efficient fine-tuning
+- **Try Other Models:** This pattern works with any HuggingFace model
+- **Enable JIT Checkpointing:** Use `enable_jit_checkpoint=True` for automatic checkpoint saving on preemption
 
-RHAI trainers automatically instrument your training code to:
+## Resources
 
-1. Intercept HuggingFace Trainer callbacks
-2. Report metrics to a sidecar metrics server
-3. Write progress to TrainJob annotations
-
-No code changes are required in your training function.
-
-## Disabling Progress Tracking
-
-If needed, you can disable progress tracking:
-
-```python
-trainer = TransformersTrainer(
-    func=train_func,
-    num_nodes=2,
-    resources_per_node={"nvidia.com/gpu": 1},
-    enable_progression_tracking=False,
-)
-```
-
-## Files
-
-| File | Description |
-|------|-------------|
-| `progress-tracking-example.ipynb` | Interactive notebook with step-by-step example |
-| `README.md` | This file |
-
-## Related Documentation
-
-- [RHAI Trainers Guide](https://docs.redhat.com/en/documentation/red_hat_openshift_ai/)
-- [Kubeflow SDK Repository](https://github.com/opendatahub-io/kubeflow-sdk)
+- [Kubeflow Trainer Documentation](https://www.kubeflow.org/docs/components/trainer/)
+- [HuggingFace Transformers](https://huggingface.co/docs/transformers/)
+- [Stanford Alpaca Dataset](https://huggingface.co/datasets/tatsu-lab/alpaca)
+- [Qwen 2.5 Model](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct)
