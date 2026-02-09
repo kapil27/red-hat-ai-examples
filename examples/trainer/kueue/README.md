@@ -71,7 +71,6 @@ Access the OpenShift AI dashboard from the top navigation bar menu:
 
 Log in, then go to **Data Science Projects** and create a project:
 
-![](./images/project_page.png)
 ![](./images/create_project.png)
 
 ### 3. Create a Workbench
