@@ -130,29 +130,29 @@ If upgrading from a previous RHOAI version, you must manually add the TrainJob f
 
 1. Verify RHBoK version:
 
-```bash
-oc get csv -n openshift-operators | grep kueue
-```
+   ```bash
+   oc get csv -n openshift-operators | grep kueue
+   ```
 
 2. Verify Kueue controller recognizes TrainJob:
 
-```bash
-oc get kueues.kueue.openshift.io cluster -o jsonpath='{.spec.config.integrations.frameworks}'
-```
+   ```bash
+   oc get kueues.kueue.openshift.io cluster -o jsonpath='{.spec.config.integrations.frameworks}'
+   ```
 
-Expected output:
+   Expected output:
 
-```text
-["Deployment","Pod","PyTorchJob","RayCluster","RayJob","StatefulSet","TrainJob"]
-```
+   ```text
+   ["Deployment","Pod","PyTorchJob","RayCluster","RayJob","StatefulSet","TrainJob"]
+   ```
 
 3. If `TrainJob` is missing, add it:
 
-```bash
-oc patch kueues.kueue.openshift.io cluster --type=json -p '[
-  {"op": "add", "path": "/spec/config/integrations/frameworks/-", "value": "TrainJob"}
-]'
-```
+   ```bash
+   oc patch kueues.kueue.openshift.io cluster --type=json -p '[
+     {"op": "add", "path": "/spec/config/integrations/frameworks/-", "value": "TrainJob"}
+   ]'
+   ```
 
 ### Enable Kueue for your project namespace
 
