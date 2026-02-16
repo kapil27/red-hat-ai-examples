@@ -180,6 +180,8 @@ trainer = TransformersTrainer(
 )
 ```
 
+> **Note:** Periodic checkpointing blocks GPU training during the save operation. Avoid checkpointing too frequently (e.g., every step) as this can significantly increase total training time and waste GPU cycles.
+
 ### Viewing Training Jobs
 
 View your training job status in the OpenShift AI Dashboard:
@@ -223,7 +225,7 @@ You can modify the example for your use case:
 | `resources_per_node` | 1 GPU | GPUs per node |
 | Model | `Qwen/Qwen2.5-1.5B-Instruct` | Any Hugging Face model |
 | Dataset | `tatsu-lab/alpaca` | Any Hugging Face dataset repo |
-| `num_train_epochs` | 1 | Training epochs |
+| `num_train_epochs` | 5 | Training epochs (allows time for pause/resume testing) |
 | `enable_jit_checkpoint` | `True` | Enable JIT checkpointing |
 | `save_steps` | 20 | Checkpoint frequency |
 | `save_total_limit` | 2 | Max checkpoints to keep |
